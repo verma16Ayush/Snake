@@ -9,6 +9,11 @@
 int width = 40; 
 int height = 20;
 
+int snakeX[100], snakeY[100];
+
+//size of snake
+int snakeSize = 0;
+
 // variables to store x and y poosition of snake head and fruit
 int headPosX, headPosY, fruitPosX, fruitPosY, score;
 
@@ -18,13 +23,16 @@ bool hasEnded = false;
 //store the move direction of the snake. wasd keymap. x to quit.
 char moveDir;
 
-void Draw(); //draw the play board
-void Setup(); // setup everyhting for a fresh start
-void Input(); // get player input if any
-void Move(); // make the snake do snaky stuff
+void Draw(); //draw the play board.
+void Setup(); // setup everyhting for a fresh start.
+void Input(); // get player input if any.
+void Move(); // make the snake do snaky stuff.
 void HideCursor(bool); // hide the console cursor. makes stuff look bad.
-void SpawnSnake(); // spawn a snaky bad boi
-void SpawnFood(); // spawn delicious food bois
+void SpawnSnake(); // spawn a snaky bad boi.
+void SpawnFood(); // spawn delicious food bois.
+void GameplayCode(); // handles the main gameplay logic of win / lose / reward checking.
+void Delay(int); // Delay code execution.
+void Bend(); // handles the bending logic of snake, seemed logical to keep it in another method.
 
 void HideCursor(bool hideOrShow)
 {
@@ -35,10 +43,23 @@ void HideCursor(bool hideOrShow)
    SetConsoleCursorInfo(consoleHandle, &info);
 }
 
+void Delay(int milliSeconds) 
+{  
+    // Storing start time 
+    clock_t startTime = clock(); 
+  
+    // looping till required time is not achieved 
+    while (clock() < startTime + milliSeconds) 
+        {}; 
+} 
+
 void Setup()
 {
     //seed the PRNG
     srand(time(0));
+
+    //reset the snake size
+    snakeSize = 1;
     
     //spawn a brand new snake
     SpawnSnake();
@@ -55,8 +76,8 @@ void SpawnSnake()
 
 void SpawnFood()
 {
-    fruitPosX = rand() % width;
-    fruitPosY = rand() % height;
+    fruitPosX = rand() % width - 1;
+    fruitPosY = rand() % height - 1;
 
     if(fruitPosX == 0)
         fruitPosX = 1;
@@ -75,6 +96,8 @@ void Input()
 
 void Move()
 {
+    TestMethod();
+
     switch (moveDir)
     {
     case 'w':
@@ -121,16 +144,68 @@ void Draw()
                 }
                 else
                 {
-                    printf(" ");
+                    int flag = 0;
+                    for (int k = 0; k < snakeSize; k++)
+                    {
+                        if(i == snakeY[k] && j == snakeX[k])
+                        {
+                            printf("o");
+                            flag = 1;
+                        }
+                    }
+
+                    if(flag == 0)
+                    {
+                        printf(" ");
+                    }
                 }
                 
             }
             
         }
         printf("\n");
-        
+    }
+    printf("\nScore: %d       size: %d", score, snakeSize);
+    
+}
+
+void Bend()
+{
+    int prevX = snakeX[0];
+    int prevY = snakeY[0];
+
+    int prev2X, prev2Y;
+
+    snakeX[0] = headPosX;
+    snakeY[0] = headPosY;
+
+    for (int i = 1; i < snakeSize; i++)
+    {
+        prev2X = snakeX[i];
+        prev2Y = snakeY[i];
+
+        snakeX[i] = prevX;
+        snakeY[i] = prevY;
+
+        prevX = prev2X;
+        prevY = prev2Y;
     }
     
+}
+
+void GameplayCode()
+{
+    if(headPosX == fruitPosX && headPosY == fruitPosY)
+    {
+        score += 10;
+        SpawnFood();
+        snakeSize += 1;
+    }
+
+    else if(headPosX >= width - 1 || headPosY >= height - 1 || headPosX <= 0 || headPosY <= 0)
+    {
+        hasEnded = true;
+    }
 }
 
 int main()
@@ -141,7 +216,9 @@ int main()
     {
         Draw();
         Input();
+        GameplayCode();
         Move();
+        Delay(10);
     }
     scanf("%d");
     return 0;

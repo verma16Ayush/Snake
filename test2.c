@@ -7,6 +7,7 @@
 #include <time.h>
 #include <windows.h>
 #include <process.h>
+#include <stdbool.h>
 
 #define UP 72
 #define DOWN 80
@@ -35,6 +36,7 @@ void Up();
 void Right();
 void ExitGame();
 int Scoreonly();
+void HideCursor(bool);
 
 struct coordinate{
     int x;
@@ -48,6 +50,8 @@ coordinate head, bend[500],food,body[30];
 
 int main()
 {
+
+    HideCursor(false);
 
     char key;
 
@@ -77,6 +81,15 @@ int main()
 
     return 0;
 
+}
+
+void HideCursor(bool hideOrShow)
+{
+   HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+   CONSOLE_CURSOR_INFO info;
+   info.dwSize = 100;
+   info.bVisible = hideOrShow;
+   SetConsoleCursorInfo(consoleHandle, &info);
 }
 
 void Move()

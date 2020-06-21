@@ -18,6 +18,9 @@ struct position fruitPos, headPos;
 //a bool to know if the game has ended;
 bool hasEnded = false;
 
+//store player score
+int score;
+
 // structure of ground matrix
 const int nCols = 60;
 const int nRows = 30;
@@ -28,7 +31,7 @@ char moveDir;
 // declare snake character array
 char snake[50];
 struct position snakeCoordinate[50];
-int initSnakeSize = 4;
+int snakeSize = 0;
 
 char board[30][60];
 
@@ -41,14 +44,21 @@ void SpawnSnake(); // self explanatory bro. also use to increase snake size
 void GenFood();// gen food at random position
 void Init(); // initialise everything for a fresh start
 void Input(); // take user input (if any).
+void GameplayCode();
 
 void Init()
 {
     //seed the PRNG
     srand(time(0));
 
+    //set snake size
+    snakeSize = 0;
+
     //spawn a new snake
     SpawnSnake();
+
+    //set score to zero
+    score = 0;
 
     //spawn food
     GenFood();
@@ -145,7 +155,9 @@ void DrawBoard()
         }
         printf("\n");
     }
+    printf("\nSCORE: %d", score);
 }
+
 
 void Move(char locDir)
 {
@@ -178,6 +190,21 @@ void Move(char locDir)
     
 }
 
+void GameplayCode()
+{
+    if(headPos.x == fruitPos.x && headPos.y == fruitPos.y)
+    {
+        score += 10;
+        GenFood();
+        snakeSize += 1;
+    }
+
+    else if(headPos.x >= nCols - 1 || headPos.y >= nRows - 1 || headPos.x <= 0 || headPos.y <= 0)
+    {
+        hasEnded = true;
+    }
+}
+
 int main()
 {
     HideCursor(FALSE);
@@ -189,6 +216,7 @@ int main()
         DrawBoard();
         Input();
         Move(moveDir);
+        GameplayCode();
     }
 
     return 0;
