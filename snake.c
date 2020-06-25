@@ -82,6 +82,7 @@ void Delay(int milliSeconds)
 void MainMenu()
 {
     printf("WELCOME TO THE SNAKE GAME!\n\n");
+    printf("Use WASD keys to control the snake\n");
     printf("Y/y: Put me in coach!\n");
     printf("Anything else: I'm too afraid of console snakes\n");
     printf("$> ");
