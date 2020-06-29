@@ -37,7 +37,7 @@ int score = 0, highScore = 0;
 bool hasEnded = false;
 
 //store the move direction of the snake. wasd keymap. x to quit.
-char moveDir;
+char moveDir = '.';
 
 void MainMenu(); // self explanatory
 void Draw(); //draw the play board.
@@ -127,6 +127,9 @@ void Setup()
 
     //spawn some dellicious food bois
     SpawnFood();
+
+    //Reset the move direction back to none
+    moveDir = '.';
 }
 
 void SpawnSnake()
