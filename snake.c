@@ -332,10 +332,10 @@ void GameLoop()
         }
     }
 
-     if(hasEnded)
-        {
-            GameOver();
-        }
+    if(hasEnded)
+    {
+        GameOver();
+    }
 }
 
 int main()
