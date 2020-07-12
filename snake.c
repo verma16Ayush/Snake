@@ -3,7 +3,7 @@
 
 
 // in case the entire play area is not visible 
-// do not maximize the console window instead drag borders to resize it.
+// do not maximize the console window, instead drag borders to resize it.
 // maximizing the windo overrides the hide cursor method and makes the game look messy
 
 
@@ -284,8 +284,6 @@ void GameplayCode()
     }
 
     //when snake touches its own body
-    //TODO: write code
-
     for (int i = 1; i < snakeSize; i++)
     {
         if(headPosX == snakeX[i] && headPosY == snakeY[i])
